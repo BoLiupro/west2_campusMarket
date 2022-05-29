@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.west2.test6_4.mapper.userInfMapper">
+    <!--
+     对用户表进行操作
+       -->
+    <!--插入新的用户信息-->
+    <insert id="addUserInf" parameterType="com.west2.test6_4.entity.TUser">
+        insert into T_user (Uname, Upassword, Uphone)
+        values (#{Uname}, #{Upassword}, #{Uphone})
+    </insert>
+
+    <!--根据UID，获得用户的信息储存到user里面-->
+    <select id="getUserByUID" resultType="com.west2.test6_4.entity.TUser">
+        select *
+        from T_user
+        where PK_UID = #{id};
+    </select>
+
+    <!--查看当前学工号用户是否已经存在，返回一个Integer类型，当不存在时返回null-->
+    <select id="checkExist" resultType="int">
+        select 1
+        from T_user
+        where Unumber = #{id} limit 1;
+    </select>
+
+    <!--查看当前学工号用户是否已经存在，返回一个Integer类型，当不存在时返回null-->
+    <select id="checkAdminExist" resultType="int">
+        select 1
+        from T_admin
+        where Anumber = #{id} limit 1;
+    </select>
+
+    <!--判断用户密码是否与手机号匹配,并且返回密码（不安全）-->
+    <select id="checkUphone2Password" resultType="String">
+        select Upassword
+        from T_user
+        where Uphone = #{id};
+    </select>
+
+    <!--判断用户密码是否与手机号匹配，符合则返回1，否则为null-->
+    <select id="checkUphone2PasswordSafe" resultType="int" parameterType="Map">
+        select 1
+        from T_user
+        where Uphone = #{Uphone}
+        AND Upassword = #{Upassword};
+    </select>
+
+    <!--根据注册电话电话找UID-->
+    <select id="checkUIDbyPhone" resultType="int">
+        select PK_UID
+        from T_user
+        where Uphone = #{id};
+    </select>
+
+    <!--封禁账户，将用户状态状态设置为显示2-->
+    <update id="banUState" parameterType="int">
+        update T_user
+        SET Ustate=2
+        where PK_UID = #{id};
+    </update>
+
+    <!--
+     对商品表进行操作
+       -->
+
+    <!--找到自增主键SID的下一位，保证不会产生名称的冲突-->
+    <select id="getNextId" resultType="int">
+        SELECT AUTO_INCREMENT
+        FROM information_schema.`TABLES`
+        WHERE TABLE_SCHEMA = 'CampusMarket'
+          AND TABLE_NAME = 'T_shopinf';
+    </select>
+
+    <!--    插入新的商品-->
+    <insert id="addNewGoods" parameterType="com.west2.test6_4.entity.TShopinf">
+        insert into T_shopinf (Sprice, Sintroduction, Sphoto, Sname, S_UID)
+        values (#{Sprice}, #{Sintroduction}, #{Sphoto}, #{Sname}, #{S_UID});
+    </insert>
+
+    <!--根据SID，获得商品的信息储存到shop里面-->
+    <select id="getGoodsByUID" resultType="com.west2.test6_4.entity.TShopinf">
+        select *
+        from T_shopinf
+        where PK_SID = #{PK_SID};
+    </select>
+
+    <!--    模糊搜索商品-->
+    <select id="getGoodsByName" resultType="com.west2.test6_4.entity.TShopinf">
+        select *
+        from T_shopinf
+        where Sstate = 2
+          and Sname like "%"#{Sname}"%";
+    </select>
+
+    <!--分页查询+模糊查询商品内容-->
+   <!-- Map m1 = new HashMap();
+    m1.put("Sname",Name);
+    m1.put("page1",(page-1)*5);
+    m1.put("page2",(page*5));
+    List bookInfByPage = mapper.getGoodsByPage(m1);-->
+    <select id="getGoodsByNameInPage" resultType="com.west2.test6_4.entity.TShopinf" parameterType="Map">
+        select *
+        from T_shopinf
+        where Sstate = 2
+          and Sname like "%"#{Sname}"%" limit #{page1}
+            , #{page2};
+    </select>
+
+    <!--    查找符合条件的商品的总数目-->
+    <select id="getGoodsLength" resultType="int">
+        select COUNT(*)
+        from T_shopinf
+        where Sstate = 2
+          and Sname like "%"#{Sname}"%";
+    </select>
+
+    <!--    按照商品状态查询，1为未审核，2为通过，3为未通过-->
+    <select id="getGoodsByState" resultType="com.west2.test6_4.entity.TShopinf" parameterType="int">
+        select *
+        from T_shopinf
+        where Sstate = #{id};
+    </select>
+
+    <!-- Map m1 = new HashMap();
+    m1.put("Sstate",Name);
+    m1.put("PK_SID",2);
+    List bookInfByPage = mapper.changeGoodsState(m1);-->
+    <!--更改商品状态，1为未审核，2为通过，3为未通过-->
+    <update id="changeGoodsState" parameterType="Map">
+        update T_shopinf
+        SET Sstate=#{Sstate}
+        where PK_SID = #{PK_SID};
+    </update>
+
+    <!--审核不通过，将商品状态状态设置为显示3-->
+    <update id="noPassGoods" parameterType="int">
+        update T_shopinf
+        SET Sstate=3
+        where PK_SID = #{id};
+    </update>
+
+    <!--按照ID删除商品数据库信息-->
+    <delete id="deleteGoodsByID" parameterType="int">
+        delete
+        from T_shopinf
+        where PK_SID = #{ID};
+    </delete>
+
+    <!--
+        对管理员表进行操作
+          -->
+
+    <!--查看管理员对应密码-->
+    <select id="checkAdminPassword" resultType="String">
+        select Apassword
+        from T_admin
+        where Aname = #{id};
+    </select>
+
+    <!--
+           对订单表进行操作
+             -->
+
+    <!--插入新的用户信息-->
+    <insert id="addOrder" parameterType="com.west2.test6_4.entity.TOrderlist">
+        insert into T_orderlist (O_sellerUID, O_buyerUID, O_SID)
+        values (#{O_sellerUID}, #{O_buyerUID}, #{O_SID})
+    </insert>
+
+</mapper>

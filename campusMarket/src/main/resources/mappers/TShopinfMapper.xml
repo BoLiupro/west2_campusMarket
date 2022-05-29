@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.west2.test6_4.mapper.TShopinfMapper">
+
+    <select id="searchGoods" resultType="com.west2.test6_4.entity.TShopinf">
+        select PK_SID PK_SID,Sprice Sprice,Sintroduction Sintroduction,Sphoto Sphoto
+             ,Sname Sname,S_UID S_UID,set_time set_time, Sstate state from T_shopinf where Sname like #{key}
+    </select>
+
+    <select id="getShopinf" resultType="com.west2.test6_4.entity.TShopinf">
+        select PK_SID PK_SID,Sprice Sprice,Sintroduction Sintroduction,Sphoto Sphoto
+             ,Sname Sname,S_UID S_UID,set_time set_time, Sstate state from T_shopinf
+    </select>
+
+    <select id="getOneShopinf" resultType="com.west2.test6_4.entity.TShopinf">
+        select PK_SID PK_SID,Sprice Sprice,Sintroduction Sintroduction,Sphoto Sphoto
+             ,Sname Sname,S_UID S_UID,set_time set_time, Sstate state from T_shopinf where Sname =#{key}
+    </select>
+
+    <select id="getOneShopinfByID" resultType="com.west2.test6_4.entity.TShopinf">
+        select PK_SID PK_SID,Sprice Sprice,Sintroduction Sintroduction,Sphoto Sphoto
+             ,Sname Sname,S_UID S_UID,set_time set_time, Sstate state from T_shopinf where PK_SID =#{PK_SID}
+    </select>
+
+    <update id="setShopState">
+        update T_shopinf set
+                         Sstate=#{state}
+        where PK_SID=#{PK_SID}
+    </update>
+
+    <update id="setShopPhoto">
+        update T_shopinf set
+            Sphoto=#{Sphoto}
+        where PK_SID=#{PK_SID}
+    </update>
+
+</mapper>

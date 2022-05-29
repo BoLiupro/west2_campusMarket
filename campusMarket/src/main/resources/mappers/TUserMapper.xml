@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.west2.test6_4.mapper.TUserMapper">
+    <!--    <select id="getPhone",>-->
+    <!--        select Uphone Uphone from T_user where PK_UID= #{PK_UID}-->
+    <!--    </select>-->
+
+    <select id="getOneUser" resultType="com.west2.test6_4.entity.TUser">
+        select *
+        from T_user
+        where PK_UID = #{PK_UID}
+    </select>
+
+    <select id="getAllUsers" resultType="com.west2.test6_4.entity.TUser">
+        select *
+        from T_user
+    </select>
+
+    <select id="getUserInf" resultType="com.west2.test6_4.entity.TUser">
+        select *
+        from T_user
+        where Unumber = #{Unumber}
+    </select>
+
+    <update id="changeUser">
+        update T_user
+        set Uname=#{Uname},
+            Uphone=#{Uphone},
+            Uintroduction=#{Uintroduction},
+            Uaddress=#{Uaddress}
+        where PK_UID = #{PK_UID}
+    </update>
+
+    <update id="changeOneUserState">
+        update T_user
+        set Ustate=#{Ustate}
+        where PK_UID = #{PK_UID}
+    </update>
+
+</mapper>

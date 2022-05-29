@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.west2.test6_4.mapper.TOrderlistMapper">
+
+    <insert id="sell">
+        insert into T_orderlist (O_sellerUID, O_SID, O_state)
+            value (#{O_sellerUID},#{O_SID},#{O_state})
+    </insert>
+
+    <update id="setOrderlist">
+        update T_orderlist
+        set O_state=#{O_state}
+        where PK_OID = #{PK_OID}
+    </update>
+
+    <update id="setTime">
+        update T_orderlist
+        set O_sellTime=#{O_sellTime}
+        where PK_OID = #{PK_OID}
+    </update>
+
+    <update id="changeOneShop" >
+        update T_orderlist
+        set O_state=#{state}
+        where O_SID = #{PK_SID}
+    </update>
+
+    <select id="selectOrderlists" resultType="com.west2.test6_4.entity.TOrderlist">
+        select PK_OID      PK_OID
+             , O_sellerUID sellerUid
+             , O_buyerUID  buyerUid
+             , O_SID       sid
+             , O_state     state
+             , O_sellTime  sellTime
+             , set_time    set_time
+        from T_orderlist
+    </select>
+
+    <select id="getBuyOrderlists" resultType="com.west2.test6_4.entity.TOrderlist">
+        select PK_OID      PK_OID
+             , O_sellerUID sellerUid
+             , O_buyerUID  buyerUid
+             , O_SID       sid
+             , O_state     state
+             , O_sellTime  sellTime
+             , set_time    set_time
+        from T_orderlist
+        where O_sellerUID = #{O_sellerUID}
+    </select>
+
+    <select id="getSellOrderlists" resultType="com.west2.test6_4.entity.TOrderlist">
+        select PK_OID      PK_OID
+             , O_sellerUID sellerUid
+             , O_buyerUID  buyerUid
+             , O_SID       sid
+             , O_state     state
+             , O_sellTime  sellTime
+             , set_time    set_time
+        from T_orderlist
+        where O_buyerUID = #{O_buyerUID}
+    </select>
+
+    <select id="getOneOrder" resultType="com.west2.test6_4.entity.TOrderlist">
+        select PK_OID      PK_OID
+             , O_sellerUID sellerUid
+             , O_buyerUID  buyerUid
+             , O_SID       sid
+             , O_state     state
+             , O_sellTime  sellTime
+             , set_time    set_time
+        from T_orderlist
+        where O_buyerUID = #{O_buyerUID}
+          and O_SID = #{O_SID}
+    </select>
+
+    <select id="selectList" resultType="com.west2.test6_4.entity.TOrderlist">
+        select PK_OID      PK_OID
+             , O_sellerUID sellerUid
+             , O_buyerUID  buyerUid
+             , O_SID       sid
+             , O_state     state
+             , O_sellTime  sellTime
+             , set_time    set_time
+        from T_orderlist
+        where O_buyerUID = #{O_buyerUID}
+    </select>
+
+</mapper>
